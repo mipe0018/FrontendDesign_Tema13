@@ -1,0 +1,304 @@
+---
+import LoginButton from "./LoginButton.astro";
+---
+
+<header class="site-header">
+    <nav
+        class="site-nav"
+        aria-label="Main navigation"
+    >
+        <a
+            class="logo"
+            href="/"
+        >
+            <span>Ask</span><span>Experts</span>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li>
+                <a href="/case-studies/taxes-and-efficiency">Case Studies</a>
+            </li>
+            <li><a href="/team">Team</a></li>
+            <li><a href="/about">About</a></li>
+        </ul>
+
+        <div class="header-actions">
+            <LoginButton />
+
+            <button
+                type="button"
+                class="menu-button"
+                aria-label="Open menu"
+                aria-expanded="false"
+                aria-controls="mobile-menu"
+            >
+                ☰
+            </button>
+        </div>
+    </nav>
+</header>
+
+<!-- Mobilmenu -->
+<input
+    type="checkbox"
+    id="menu-toggle"
+    class="menu-toggle"
+/>
+
+<label
+    for="menu-toggle"
+    class="menu-backdrop"
+    aria-label="Close menu"
+></label>
+
+<div
+    class="mobile-menu"
+    id="mobile-menu"
+>
+    <label
+        for="menu-toggle"
+        class="close-menu"
+        aria-label="Close menu"
+    >
+        ×
+    </label>
+
+    <nav aria-label="Mobile navigation">
+        <a href="/">Home</a>
+        <a href="/case-studies/taxes-and-efficiency">Case Studies</a>
+        <a href="/team">Team</a>
+        <a href="/about">About</a>
+    </nav>
+</div>
+
+<script>
+    const toggle = document.querySelector<HTMLInputElement>("#menu-toggle");
+    const button = document.querySelector<HTMLButtonElement>(".menu-button");
+    const menu = document.querySelector<HTMLElement>("#mobile-menu");
+
+    if (toggle && button && menu) {
+        const sync = () => {
+            const open = toggle.checked;
+            button.setAttribute("aria-expanded", String(open));
+            button.setAttribute(
+                "aria-label",
+                open ? "Close menu" : "Open menu",
+            );
+            // Den lukkede menu må hverken fokuseres eller læses op
+            menu.inert = !open;
+        };
+
+        // Burgerknappen er en rigtig <button> og styrer checkboxen direkte
+        button.addEventListener("click", () => {
+            toggle.checked = !toggle.checked;
+            sync();
+        });
+
+        // Baggrunden og luk-knappen er stadig <label for="menu-toggle">,
+        // så deres klik opdaterer også aria-tilstanden herigennem
+        toggle.addEventListener("change", sync);
+
+        // Escape lukker menuen og sender fokus tilbage til burgerknappen
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && toggle.checked) {
+                toggle.checked = false;
+                sync();
+                button.focus();
+            }
+        });
+
+        sync();
+    }
+</script>
+
+<style>
+    @layer components {
+        /* Header */
+        .site-header {
+            container-type: inline-size;
+            background-color: var(--color-neutrals-900);
+            color: var(--color-on-surface-elevated);
+        }
+
+        .site-nav {
+            max-width: 75rem;
+            margin-inline: auto;
+            padding: 1.25rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        /* Logo */
+        .logo {
+            justify-self: start;
+            color: var(--color-on-surface-elevated);
+            font-size: 1.25rem;
+            font-weight: 700;
+            line-height: 1;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .logo span:last-child {
+            color: var(--color-action);
+        }
+
+        .logo:hover span:last-child {
+            opacity: 0.8;
+        }
+
+        /* Navigation */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .nav-links a {
+            position: relative;
+            color: var(--color-on-surface-elevated);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: -0.4rem;
+            height: 3px;
+            border-radius: 999px;
+            background-color: var(--color-action);
+            transform: scaleX(0);
+            transition: transform 0.2s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a:focus-visible::after {
+            transform: scaleX(1);
+        }
+
+        /* Login og hamburger */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            justify-self: end;
+            gap: 1rem;
+        }
+
+        .menu-toggle,
+        .menu-button,
+        .mobile-menu,
+        .menu-backdrop {
+            display: none;
+        }
+
+        /* Mobilmenu.
+           Bemærk: @media og ikke @container – mobile-menuen, backdrop og
+           checkbox ligger som søskende uden for .site-header (containeren),
+           så en unavngiven container-query aldrig ville gælde dem. Headeren
+           er altid viewport-bred, så breakpointet er identisk. */
+        @media (max-width: 700px) {
+            .site-nav {
+                grid-template-columns: 1fr auto;
+                gap: 1rem;
+                padding: 1.25rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .header-actions {
+                grid-column: 2;
+                grid-row: 1;
+            }
+
+            .menu-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0;
+                border: 0;
+                background: none;
+                color: var(--color-on-surface-elevated);
+                font: inherit;
+                font-size: 1.8rem;
+                line-height: 1;
+                cursor: pointer;
+            }
+
+            .menu-toggle {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            .mobile-menu {
+                position: fixed;
+                inset-block: 0;
+                inset-inline-end: 0;
+                z-index: 10000;
+                display: flex;
+                flex-direction: column;
+                width: min(85%, 400px);
+                box-sizing: border-box;
+                padding: 5rem 2rem 2rem;
+                background-color: var(--color-neutrals-900);
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                overflow-y: auto;
+            }
+
+            .menu-toggle:checked ~ .mobile-menu {
+                transform: translateX(0);
+            }
+
+            .menu-backdrop {
+                position: fixed;
+                inset: 0;
+                z-index: 9998;
+                background: rgb(0 0 0 / 50%);
+            }
+
+            .menu-toggle:checked ~ .menu-backdrop {
+                display: block;
+            }
+
+            .close-menu {
+                position: absolute;
+                top: 1rem;
+                right: 1.5rem;
+                color: var(--color-on-surface-elevated);
+                font-size: 2.5rem;
+                line-height: 1;
+                cursor: pointer;
+            }
+
+            .mobile-menu nav {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .mobile-menu nav a {
+                padding: 1rem 0;
+                border-bottom: 1px solid var(--color-neutrals-700);
+                color: var(--color-on-surface-elevated);
+                text-decoration: none;
+            }
+
+            .mobile-menu nav a:hover {
+                color: var(--color-action);
+            }
+        }
+    }
+</style>

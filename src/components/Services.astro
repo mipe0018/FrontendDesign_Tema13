@@ -1,21 +1,160 @@
 ---
-//@ts-nocheck
 import ServiceCard from "@components/ServiceCard.astro";
+import ArrowRight from "@icons/arrow--right.svg";
 
-const serviceData = await fetch("https://ftk-api.pages.dev/services").then(
-  (res) => res.json(),
-);
+interface Service {
+  title: string;
+  description: string;
+  buttonText: string;
+}
+
+const serviceData: Service[] = await fetch(
+  "https://ftk-api.pages.dev/services",
+).then((res) => res.json());
 ---
 
-<div class="services">
-  {serviceData.map((service) => <ServiceCard service={service} />)}
-</div>
+<section
+  class="services"
+  aria-labelledby="services-title"
+>
+  <h2
+    id="services-title"
+    class="visually-hidden"
+  >
+    Our Services
+  </h2>
+
+  <!-- Desktop -->
+  <div class="desktop-services">
+    {serviceData.map((service) => <ServiceCard service={service} />)}
+  </div>
+
+  <!-- Mobil -->
+  <div class="mobile-services">
+    {
+      serviceData.map((service) => (
+        <details class="mobile-service">
+          <summary>
+            <span>{service.title}</span>
+            <ArrowRight stroke-width={2.5} />
+          </summary>
+
+          <div class="service-panel">
+            <h3>{service.title}</h3>
+            <p>{service.description}</p>
+
+            <a href="#0">
+              {service.buttonText}
+              <ArrowRight stroke-width={2.5} />
+            </a>
+          </div>
+        </details>
+      ))
+    }
+  </div>
+</section>
 
 <style>
   @layer components {
     .services {
+      max-width: 1200px;
+      margin-inline: auto;
+      padding-inline: 2rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Desktop */
+    .desktop-services {
       display: grid;
-      gap: 1rem;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+
+    .mobile-services {
+      display: none;
+    }
+
+    /* Mobil */
+    @media (max-width: 768px) {
+      .services {
+        padding-inline: 1.5rem;
+      }
+
+      .desktop-services {
+        display: none;
+      }
+
+      .mobile-services {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .mobile-service summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--color-text-muted);
+        color: var(--color-on-ui-primary);
+        font-weight: bold;
+        cursor: pointer;
+        list-style: none;
+      }
+
+      .mobile-service summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .mobile-service summary svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        transition: transform 0.3s ease;
+      }
+
+      .mobile-service[open] summary svg {
+        transform: rotate(90deg);
+      }
+
+      .service-panel {
+        margin-block: 1rem;
+        padding: 1.5rem;
+        background: var(--color-blue-700-transparent);
+        color: var(--color-on-surface-elevated);
+        border-radius: 20px;
+      }
+
+      .service-panel h3 {
+        font: var(--heading-sm);
+        margin-bottom: 0.75rem;
+      }
+
+      .service-panel p {
+        font: var(--body-lg);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        opacity: 0.9;
+      }
+
+      .service-panel a {
+        display: inline-flex;
+        align-items: center;
+        gap: 1ch;
+        color: var(--color-action);
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      .service-panel a svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      .service-panel a:hover {
+        text-decoration: underline;
+      }
     }
   }
 </style>

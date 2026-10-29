@@ -1,0 +1,396 @@
+---
+import ValuesCard from "@components/home/ValuesCard.astro";
+
+interface ValueLink {
+    text: string;
+    url: string;
+}
+
+interface ValueItem {
+    icon: string;
+    title: string;
+    description: string;
+    link?: ValueLink;
+}
+
+interface ValuesApiResponse {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    button: {
+        text: string;
+    };
+    values: ValueItem[];
+}
+
+interface Props {
+    variant?: "default" | "alternative";
+}
+
+const { variant = "default" } = Astro.props;
+
+const response = await fetch("https://ftk-api.pages.dev/core-values");
+
+if (!response.ok) {
+    throw new Error(
+        `Kunne ikke hente core values: ${response.status} ${response.statusText}`,
+    );
+}
+
+const valuesData = (await response.json()) as ValuesApiResponse;
+const values = Array.isArray(valuesData.values) ? valuesData.values : [];
+---
+
+<section class:list={["values-section", `values-${variant}`]}>
+    <div class="values-wrapper">
+        <div class="values-header">
+            <div class="values-text">
+                <p class="eyebrow">{valuesData.eyebrow}</p>
+
+                <h2>{valuesData.title}</h2>
+
+                <p class="subtitle">{valuesData.subtitle}</p>
+            </div>
+
+            <a
+                class="values-button"
+                href="/#contact"
+            >
+                {valuesData.button.text}
+            </a>
+        </div>
+
+        <div class="values-cards desktop-values-cards">
+            {
+                values.map((value, index) => (
+                    <div
+                        class:list={[
+                            "value-card-item",
+                            { "is-selected": index === 0 },
+                        ]}
+                        data-value-index={index}
+                    >
+                        <ValuesCard
+                            value={value}
+                            variant={variant}
+                        />
+                    </div>
+                ))
+            }
+        </div>
+
+        {
+            values.length > 0 && (
+                <div class="mobile-values">
+                    <div
+                        class="mobile-value-buttons"
+                        aria-label="Vælg en værdi"
+                    >
+                        {values.map((value, index) => (
+                            <button
+                                type="button"
+                                class:list={{ active: index === 0 }}
+                                data-value-index={index}
+                                aria-pressed={index === 0 ? "true" : "false"}
+                            >
+                                {value.title}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )
+        }
+    </div>
+</section>
+
+<script>
+    document.addEventListener("click", (event) => {
+        if (!(event.target instanceof Element)) return;
+
+        const button = event.target.closest(".mobile-value-buttons button");
+
+        if (!(button instanceof HTMLButtonElement)) return;
+
+        const section = button.closest(".values-section");
+        const index = button.dataset.valueIndex;
+
+        if (!section || index === undefined) return;
+
+        const cards = section.querySelectorAll(".value-card-item");
+        const selectedCard = section.querySelector(
+            `.value-card-item[data-value-index="${index}"]`,
+        );
+
+        if (!selectedCard) return;
+
+        cards.forEach((card) => {
+            card.classList.toggle("is-selected", card === selectedCard);
+        });
+
+        section
+            .querySelectorAll(".mobile-value-buttons button")
+            .forEach((item) => {
+                const isActive = item === button;
+
+                item.classList.toggle("active", isActive);
+                item.setAttribute("aria-pressed", String(isActive));
+            });
+    });
+</script>
+
+<style>
+    .values-section {
+        position: relative;
+        overflow: hidden;
+        padding: 4rem 0;
+        background-color: #030712;
+        background-image:
+            linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+            linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.04) 1px,
+                transparent 1px
+            );
+        background-size: 50px 50px;
+    }
+
+    .values-section.values-alternative {
+        background-color: #d9d9d9;
+        background-image:
+            linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+    }
+
+    .values-section::after {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: radial-gradient(
+            ellipse at center,
+            transparent 20%,
+            #030712 100%
+        );
+        content: "";
+        pointer-events: none;
+    }
+
+    .values-section.values-alternative::after {
+        background: radial-gradient(
+            ellipse at center,
+            transparent 20%,
+            #d9d9d9 100%
+        );
+    }
+
+    .values-wrapper {
+        position: relative;
+        z-index: 1;
+        width: min(75rem, calc(100% - 2rem));
+        margin-inline: auto;
+    }
+
+    .values-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .values-text {
+        max-width: 650px;
+    }
+
+    .eyebrow {
+        margin: 0 0 1rem;
+        color: var(--color-on-surface-elevated);
+        font: var(--body-sm);
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .values-text h2 {
+        margin: 0 0 1rem;
+        color: var(--color-on-surface-elevated);
+        font: var(--heading-lg);
+        letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+        max-width: 600px;
+        margin: 0;
+        color: var(--color-on-surface-elevated);
+        font: var(--body-lg);
+        line-height: 1.6;
+    }
+
+    .values-section.values-alternative .eyebrow,
+    .values-section.values-alternative .values-text h2,
+    .values-section.values-alternative .subtitle {
+        color: #030712;
+    }
+
+    .values-button {
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        padding: 0.8rem 1.5rem;
+        transform: translateX(-4rem);
+        border-radius: 999px;
+        background-color: white;
+        color: #030712;
+        font-size: 0.9rem;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .values-section.values-alternative .values-button {
+        background-color: var(--color-blue-700);
+        color: var(--color-on-surface-elevated);
+    }
+
+    .values-button:hover {
+        opacity: 0.8;
+    }
+
+    .values-button:focus-visible,
+    .mobile-value-buttons button:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 4px;
+    }
+
+    .values-cards {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 2rem;
+        padding-inline: 1rem;
+    }
+
+    .value-card-item {
+        min-width: 0;
+    }
+
+    .mobile-values {
+        display: none;
+    }
+
+    @media (max-width: 900px) {
+        .values-wrapper {
+            width: calc(100% - 6rem);
+        }
+
+        .values-header {
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .values-text {
+            max-width: 100%;
+        }
+
+        .values-text h2 {
+            margin-bottom: 0.75rem;
+        }
+
+        .subtitle {
+            max-width: 100%;
+        }
+
+        .values-button {
+            transform: none;
+        }
+
+        .values-cards {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 2rem;
+            padding-inline: 0;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .values-section {
+            padding: 3.5rem 0;
+        }
+
+        .values-wrapper {
+            width: calc(100% - 3rem);
+        }
+
+        .values-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .values-text {
+            width: 100%;
+            max-width: none;
+        }
+
+        .eyebrow {
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .values-text h2 {
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            width: 100%;
+            max-width: none;
+        }
+
+        .values-button {
+            align-self: flex-start;
+        }
+
+        .desktop-values-cards {
+            display: block;
+            padding: 0;
+        }
+
+        .desktop-values-cards .value-card-item {
+            display: none;
+        }
+
+        .desktop-values-cards .value-card-item.is-selected {
+            display: block;
+        }
+
+        .mobile-values {
+            display: block;
+            margin-top: 1.5rem;
+        }
+
+        .mobile-value-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .mobile-value-buttons button {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: none;
+            border-radius: 999px;
+            background-color: var(--color-neutrals-200);
+            color: var(--color-text);
+            font: var(--button-sm);
+            cursor: pointer;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+
+        .mobile-value-buttons button.active {
+            background-color: var(--color-blue-700);
+            color: white;
+        }
+    }
+</style>

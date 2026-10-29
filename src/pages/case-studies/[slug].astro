@@ -1,8 +1,13 @@
 ---
-//@ts-nocheck
+import ArrowRight from "@icons/arrow--right.svg";
 import { getCaseStudies } from "@lib/api";
+import type { CaseStudy } from "@lib/api";
 import { Image } from "astro:assets";
 import Layout from "@layouts/Layout.astro";
+
+interface Props {
+  caseStudy: CaseStudy;
+}
 
 export async function getStaticPaths() {
   const caseStudies = await getCaseStudies();
@@ -14,80 +19,559 @@ export async function getStaticPaths() {
 }
 
 const { caseStudy } = Astro.props;
-const { caseName, category, date, image, buttonLabel } = caseStudy.caseDetails;
+const { caseDetails, sections = [] } = caseStudy;
+const { caseName, category, date, image, buttonLabel } = caseDetails;
 ---
 
 <Layout>
-  <article class="case-story-article">
-    <header>
-      <Image
-        src={image.src}
-        alt={image.alt}
-        width={image.width}
-        height={image.height}
-      />
-      <div class="case-details">
-        <dl>
-          <div>
-            <dt>Case Name</dt>
-            <dd>{caseName}</dd>
-          </div>
-          <div>
-            <dt>Category</dt>
-            <dd class="category">{category}</dd>
-          </div>
-          <div>
-            <dt>Date</dt>
-            <dd class="date">{date}</dd>
-          </div>
-        </dl>
-        <a href="#0" class="button">{buttonLabel}</a>
-      </div>
-    </header>
-    <section class="case-story-content">
-      {
-        caseStudy.sections.map((section, index) => (
-          <>
-            {index === 0 ? (
-              <h2>{section.title}</h2>
-            ) : (
-              <h3>{section.title}</h3>
-            )}
+  <main class="case-study-page">
+    <header class="case-heading">
+      <p class="eyebrow">Case Study</p>
 
-            {Array.isArray(section.content) ? (
-              <>
-                {section.content.map((item) => (
-                  <p>{item}</p>
-                ))}
-              </>
-            ) : (
-              <p>{section.content}</p>
-            )}
-            {section.highlights && (
-              <ul>
+      <div class="case-title-wrapper">
+        <h1 id="case-title">{caseStudy.title}</h1>
+        <span
+          class="case-title-line"
+          aria-hidden="true"
+        ></span>
+      </div>
+
+      <p class="intro">
+        Explore the story, process and results behind this project.
+      </p>
+    </header>
+
+    <section
+      class="case-hero"
+      aria-labelledby="case-title"
+    >
+      <div class="case-hero-image">
+        <Image
+          src={image.src}
+          alt={image.alt}
+          width={image.width}
+          height={image.height}
+        />
+      </div>
+
+      <div class="case-info">
+        <div class="case-info-item">
+          <span>Case Name</span>
+          <strong>{caseName}</strong>
+        </div>
+
+        <span
+          class="case-divider"
+          aria-hidden="true"
+        ></span>
+
+        <div class="case-info-item">
+          <span>Category</span>
+          <strong>{category}</strong>
+        </div>
+
+        <span
+          class="case-divider"
+          aria-hidden="true"
+        ></span>
+
+        <div class="case-info-item">
+          <span>Date</span>
+          <strong>{date}</strong>
+        </div>
+
+        {
+          buttonLabel && (
+            <a
+              href="#case-content"
+              class="live-button"
+            >
+              {buttonLabel}
+              <ArrowRight class="arrow" />
+            </a>
+          )
+        }
+      </div>
+    </section>
+
+    <div
+      id="case-content"
+      class="case-content"
+    >
+      {
+        sections.map((section) => (
+          <article class="case-section">
+            <h2>{section.title}</h2>
+
+            <div class="case-text">
+              {Array.isArray(section.content) ? (
+                section.content.map((paragraph) => <p>{paragraph}</p>)
+              ) : section.content ? (
+                <p>{section.content}</p>
+              ) : null}
+            </div>
+
+            {section.highlights && section.highlights.length > 0 && (
+              <ul class="case-highlights">
                 {section.highlights.map((highlight) => (
                   <li>{highlight}</li>
                 ))}
               </ul>
             )}
+
             {section.image && (
-              <figure>
+              <figure class="case-image">
                 <Image
                   src={section.image.src}
                   alt={section.image.alt}
                   width={section.image.width}
                   height={section.image.height}
                 />
+
                 {section.image.caption && (
                   <figcaption>{section.image.caption}</figcaption>
                 )}
               </figure>
             )}
-          </>
+          </article>
         ))
       }
-    </section>
-  </article>
+    </div>
+  </main>
 </Layout>
 
-<style></style>
+<style>
+  /* =========================================
+     MACRO LAYOUT
+  ========================================= */
+
+  .case-study-page {
+    display: grid;
+    grid-template-columns:
+      minmax(1rem, 1fr)
+      minmax(0, 75rem)
+      minmax(1rem, 1fr);
+    width: 100%;
+    min-width: 0;
+    color: var(--color-text);
+  }
+
+  .case-heading,
+  .case-hero,
+  .case-content {
+    grid-column: 2;
+    min-width: 0;
+  }
+
+  /* =========================================
+     HEADING
+  ========================================= */
+
+  .case-heading {
+    margin: 4rem auto 3rem;
+    text-align: center;
+  }
+
+  .eyebrow {
+    margin: 0 0 1rem;
+    color: var(--color-text-muted);
+    font: var(--body-sm);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .case-title-wrapper {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  .case-title-wrapper h1 {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    color: var(--color-neutrals-900);
+    font: var(--heading-lg);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+    overflow-wrap: anywhere;
+  }
+
+  .case-title-line {
+    position: absolute;
+    z-index: 0;
+    inset-inline-start: calc(-50vw + 50%);
+    inset-block-end: 0.05em;
+    width: calc(50vw + 50%);
+    height: 0.3rem;
+    background: var(--color-action);
+  }
+
+  .intro {
+    max-width: 600px;
+    margin: 1.25rem auto 0;
+    color: var(--color-text-muted);
+    font: var(--body-lg);
+    line-height: 1.7;
+  }
+
+  /* =========================================
+     HERO
+     Original image styling from version 2
+  ========================================= */
+
+  .case-hero {
+    position: relative;
+    margin-block-end: 8rem;
+  }
+
+  .case-hero-image {
+    width: 100%;
+    height: 25rem;
+    overflow: hidden;
+    border-radius: 22px;
+  }
+
+  .case-hero-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* =========================================
+     CASE INFORMATION
+  ========================================= */
+
+  .case-info {
+    position: absolute;
+    z-index: 10;
+    left: 50%;
+    bottom: -38px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    width: min(780px, calc(100% - 80px));
+    min-height: 6rem;
+    padding: 1rem 1.5rem;
+    box-sizing: border-box;
+    border-radius: 14px;
+    background: var(--color-blue-700, #2563eb);
+    color: white;
+    box-shadow: 0 12px 30px rgb(0 0 0 / 15%);
+  }
+
+  .case-info-item {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  .case-info-item span {
+    color: rgb(255 255 255 / 75%);
+    font: var(--body-sm);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .case-info-item strong {
+    overflow: hidden;
+    font: var(--body-md);
+    font-weight: 600;
+    line-height: 1.5;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .case-divider {
+    flex: 0 0 1px;
+    height: 28px;
+    background: rgb(255 255 255 / 30%);
+  }
+
+  .live-button {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-inline-start: auto;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    background: var(--color-action);
+    color: var(--color-neutrals-900);
+    font: var(--body-md);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
+  }
+
+  .live-button:hover {
+    opacity: 0.85;
+  }
+
+  .live-button:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 3px;
+  }
+
+  .arrow {
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  /* =========================================
+     CASE CONTENT + SUBGRID
+  ========================================= */
+
+  .case-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    padding-inline: 1.5rem;
+    box-sizing: border-box;
+  }
+
+  .case-section {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    width: min(900px, 100%);
+    margin: 0 auto 6rem;
+    min-width: 0;
+  }
+
+  .case-section:last-child {
+    margin-block-end: 0;
+  }
+
+  .case-section h2,
+  .case-text,
+  .case-highlights,
+  .case-image {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .case-section h2 {
+    margin: 0 0 2rem;
+    color: var(--color-text);
+    font: var(--heading-lg);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+
+  .case-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    /* Smal, centreret brødtekst (~65ch) – overskrifter og billeder
+       beholder den bredere sektionsbredde */
+    max-width: 65ch;
+    margin-inline: auto;
+  }
+
+  .case-text p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font: var(--body-lg);
+    line-height: 1.8;
+  }
+
+  /* =========================================
+     HIGHLIGHTS
+  ========================================= */
+
+  .case-highlights {
+    display: grid;
+    gap: 0.75rem;
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .case-highlights li {
+    position: relative;
+    padding-inline-start: 1.5rem;
+    color: var(--color-text-muted);
+    font: var(--body-md);
+    line-height: 1.7;
+  }
+
+  .case-highlights li::before {
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0.65em;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--color-action);
+    content: "";
+  }
+
+  /* =========================================
+     CONTENT IMAGES
+  ========================================= */
+
+  .case-image {
+    position: relative;
+    margin: 3rem 0 0;
+    overflow: hidden;
+    border-radius: 20px;
+    background: var(--color-neutrals-900);
+  }
+
+  .case-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: brightness(0.9);
+  }
+
+  .case-image figcaption {
+    position: absolute;
+    z-index: 1;
+    inset-inline: 0;
+    inset-block-end: 0;
+    box-sizing: border-box;
+    padding: 4rem 1.5rem 1.5rem;
+    background: linear-gradient(to top, rgb(3 7 18 / 90%), rgb(3 7 18 / 0%));
+    color: var(--color-neutrals-50);
+    font: var(--body-sm);
+    line-height: 1.5;
+  }
+
+  /* =========================================
+     CONTAINER QUERIES
+  ========================================= */
+
+  .case-hero {
+    container-type: inline-size;
+  }
+
+  @container (max-width: 700px) {
+    .case-info {
+      bottom: -90px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      width: calc(100% - 24px);
+      height: auto;
+      min-height: 0;
+      padding: 1rem;
+    }
+
+    .case-info-item strong {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .case-divider {
+      display: none;
+    }
+
+    .live-button {
+      justify-self: start;
+      margin-inline-start: 0;
+      white-space: normal;
+    }
+  }
+
+  .case-content {
+    container-type: inline-size;
+  }
+
+  @container (max-width: 600px) {
+    .case-section {
+      margin-block-end: 4rem;
+    }
+
+    .case-section h2 {
+      margin-block-end: 1.5rem;
+    }
+
+    .case-text p {
+      font-size: 1rem;
+    }
+
+    .case-image {
+      margin-block-start: 2rem;
+      border-radius: 16px;
+    }
+
+    .case-image figcaption {
+      position: static;
+      padding: 1rem;
+      background: var(--color-neutrals-900);
+    }
+  }
+
+  /* Viewport-level adjustments */
+
+  @media (max-width: 900px) {
+    .case-study-page {
+      grid-template-columns: 1rem minmax(0, 1fr) 1rem;
+    }
+
+    .case-heading {
+      margin-block: 3rem 2rem;
+    }
+
+    .case-hero-image {
+      height: 22rem;
+    }
+
+    .case-info {
+      gap: 1rem;
+      padding-inline: 1.25rem;
+    }
+
+    .case-content {
+      padding-inline: 0;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .case-heading {
+      margin-block: 2.5rem 2rem;
+    }
+
+    .case-title-wrapper h1 {
+      font-size: clamp(2.2rem, 10vw, 2.8rem);
+    }
+
+    .case-title-line {
+      height: 0.25rem;
+    }
+
+    .intro {
+      margin-block-start: 1rem;
+      font-size: 1rem;
+    }
+
+    .case-hero {
+      margin-block-end: 10rem;
+    }
+
+    .case-hero-image {
+      height: 280px;
+      border-radius: 18px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .live-button {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,101 @@
+---
+
+---
+
+<section
+    class="team-hero"
+    aria-labelledby="team-title"
+>
+    <div class="team-heading">
+        <p class="eyebrow">Team</p>
+        <h1 id="team-title">The Consultors</h1>
+        <p class="team-intro">
+            Our success stems from the synergy between dedicated teams and our
+            valued clients. We prioritize a company culture that fosters
+            exceptional productivity and ensures customer satisfaction.
+        </p>
+    </div>
+</section>
+
+<style>
+    .team-hero {
+        width: 100%;
+    }
+
+    .team-heading {
+        width: min(75rem, calc(100% - 4rem));
+        margin: 4rem auto 3rem;
+        text-align: center;
+    }
+
+    .eyebrow {
+        margin: 0 0 1rem;
+        font: var(--body-sm);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--color-text);
+    }
+
+    .team-heading h1 {
+        position: relative;
+        z-index: 1;
+        width: fit-content;
+        margin: 0 auto 1rem;
+        font: var(--heading-lg);
+        letter-spacing: -0.03em;
+        color: var(--color-text);
+    }
+
+    /* Gul streg – samme styling som .case-title-line på Case Study-siden
+       (fit-content gør h1's bredde = tekstens bredde, som case-sidens
+       inline-block-wrapper, så stregens beregninger matcher præcist) */
+    .team-heading h1::after {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        inset-inline-start: calc(-50vw + 50%);
+        inset-block-end: 0.05em;
+        width: calc(50vw + 50%);
+        height: 0.3rem;
+        background: var(--color-action);
+    }
+
+    .team-intro {
+        max-width: 600px;
+        margin: 1.25rem auto 0;
+        font: var(--body-lg);
+        line-height: 1.6;
+        color: var(--color-text-muted);
+    }
+
+    @media (max-width: 768px) {
+        .team-heading {
+            width: calc(100% - 3rem);
+            margin: 2.5rem auto 2rem;
+        }
+
+        .eyebrow {
+            margin-bottom: 0.5rem;
+        }
+
+        .team-heading h1 {
+            margin-bottom: 0.75rem;
+            font: var(--heading-xl);
+            font-size: 2.8rem;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+        }
+
+        .team-heading h1::after {
+            height: 0.25rem;
+        }
+
+        .team-intro {
+            max-width: 450px;
+            margin: 0 auto;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+    }
+</style>
