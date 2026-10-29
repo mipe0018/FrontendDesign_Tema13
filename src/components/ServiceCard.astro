@@ -1,32 +1,62 @@
 ---
 const { service } = Astro.props;
+
 import ArrowRight from "@icons/arrow--right.svg";
 ---
 
 <article>
-  <h2>{service.title}</h2>
+  <h3>{service.title}</h3>
+
   <p>{service.description}</p>
-  <a href="#0">{service.buttonText} <ArrowRight stroke-width={2.5} /></a>
-  <!-- <a> burde måske være en variant af en component -->
+
+  <a href="#0">
+    {service.buttonText}
+    <ArrowRight stroke-width={2.5} />
+  </a>
 </article>
 
 <style>
   @layer components {
     article {
+      display: flex;
+      flex-direction: column;
+      padding: 2rem;
       background: var(--color-blue-700-transparent);
       color: var(--color-on-surface-elevated);
-      padding: 2rem; /* Dette burde være en token */
-      border-radius: 20px; /* Dette burde være en token */
+      border-radius: 20px;
     }
+
+    h3 {
+      font: var(--heading-sm);
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font: var(--body-lg);
+      line-height: 1.6;
+      color: var(--color-on-surface-elevated);
+      opacity: 0.9;
+      margin-bottom: 2rem;
+    }
+
     a {
-      display: inline flex;
+      display: inline-flex;
+      align-items: center;
       gap: 1ch;
+      margin-top: auto;
       color: var(--color-action);
       font-weight: bold;
+      text-decoration: none;
+    }
 
-      svg {
-        inline-size: 16px;
-      }
+    a svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
   }
 </style>

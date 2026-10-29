@@ -1,0 +1,217 @@
+---
+import { Image } from "astro:assets";
+import InfoImg from "@assets/images/InfoImg.png";
+import checkmarkIcon from "@icons/checkmark.svg";
+---
+
+<section
+    class="info"
+    aria-labelledby="info-title"
+>
+    <div class="info-inner">
+        <div class="info-image">
+            <div
+                class="green-box"
+                aria-hidden="true"
+            >
+            </div>
+
+            <Image
+                class="info-img"
+                src={InfoImg}
+                alt="Consultalk collaboration"
+                loading="lazy"
+            />
+        </div>
+
+        <div class="info-text">
+            <p class="info-eyebrow">We'll work with you</p>
+
+            <h2 id="info-title">What To Expect</h2>
+
+            <p class="info-description">
+                Our collaboration is built on transparency, efficiency, and
+                measurable results. Together, we create strategies tailored to
+                your unique needs and goals.
+            </p>
+
+            <ul class="info-benefits">
+                <li>
+                    <Image
+                        class="icon"
+                        src={checkmarkIcon}
+                        alt=""
+                    />
+                    <span>
+                        Collaborate to build actionable strategies that drive
+                        sustainable growth and deliver tangible outcomes.
+                    </span>
+                </li>
+
+                <li>
+                    <Image
+                        class="icon"
+                        src={checkmarkIcon}
+                        alt=""
+                    />
+                    <span>
+                        Identify opportunities to optimize processes and
+                        implement impactful solutions with measurable results.
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<style>
+    @layer components {
+        .info {
+            grid-column: a / d;
+            min-width: 0;
+            margin-block-start: clamp(4rem, 12vw, 15rem);
+        }
+
+        .info-inner {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            align-items: center;
+            gap: clamp(1.5rem, 4vw, 3rem);
+
+            width: min(100%, 75rem);
+            margin-inline: auto;
+            padding-inline: 2rem;
+            box-sizing: border-box;
+
+            container-type: inline-size;
+        }
+
+        /* Image */
+
+        .info-image {
+            position: relative;
+            min-width: 0;
+            padding: 1.25rem;
+            isolation: isolate;
+        }
+
+        .info-img {
+            position: relative;
+            z-index: 1;
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 25px;
+        }
+
+        .green-box {
+            position: absolute;
+            z-index: 0;
+            inset-block-start: 0.5rem;
+            inset-inline-start: 0.5rem;
+            width: 10rem;
+            aspect-ratio: 1;
+            border-radius: 25px;
+            background-color: var(--color-green-400);
+        }
+
+        /* Text */
+
+        .info-text {
+            display: grid;
+            align-content: center;
+            justify-items: start;
+            gap: 0.75rem;
+            min-width: 0;
+        }
+
+        .info-eyebrow,
+        .info-text h2,
+        .info-description {
+            margin: 0;
+        }
+
+        .info-eyebrow {
+            color: var(--color-blue-700, #2563eb);
+            font: var(--body-sm);
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .info-text h2 {
+            font: var(--heading-lg);
+            letter-spacing: -0.03em;
+            text-wrap: balance;
+        }
+
+        .info-description {
+            color: var(--color-text-muted);
+            font: var(--body-lg);
+            line-height: 1.6;
+        }
+
+        /* Benefits */
+
+        .info-benefits {
+            display: grid;
+            gap: 1rem;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .info-benefits li {
+            display: grid;
+            grid-template-columns: 1.75rem minmax(0, 1fr);
+            align-items: start;
+            gap: 0.75rem;
+            color: var(--color-text-muted);
+            font: var(--body-lg);
+            line-height: 1.6;
+        }
+
+        .icon {
+            display: block;
+            width: 1.75rem;
+            height: 1.75rem;
+            margin-block-start: 0.15rem;
+            filter: invert(48%) sepia(79%) saturate(500%) hue-rotate(90deg);
+        }
+
+        /* Adapt to the available component width */
+
+        @container (max-width: 700px) {
+            .info-inner {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 2rem;
+                padding-inline: 1.5rem;
+            }
+
+            .info-image {
+                padding: 0.75rem;
+            }
+
+            .green-box {
+                inset-block-start: 0.25rem;
+                inset-inline-start: 0.25rem;
+                width: 6rem;
+            }
+
+            .info-text {
+                gap: 0.75rem;
+            }
+
+            .info-benefits li {
+                grid-template-columns: 1.5rem minmax(0, 1fr);
+                font: var(--body-md);
+                line-height: 1.6;
+            }
+
+            .icon {
+                width: 1.5rem;
+                height: 1.5rem;
+            }
+        }
+    }
+</style>

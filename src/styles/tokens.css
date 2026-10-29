@@ -35,6 +35,37 @@
 
 /* ==== Spacing ==== */
 
-/* ==== Typography ==== */
+:root {
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 1rem; /* 16px */
+  --space-4: 1.5rem; /* 24px */
+  --space-5: 2rem; /* 32px */
+  --space-6: 3rem; /* 48px */
+  --space-7: 4rem; /* 64px */
+  --space-8: 6rem; /* 96px */
+}
+
+/* ==== Typography ====
+   Shorthands til brug med font: – kun family fra tokens, øvrige værdier
+   overskrives af efterfølgende deklarationer, hvor det er nødvendigt. */
+
+:root {
+  --body-sm: 400 0.875rem/1.5 var(--font-lato);
+  --body-md: 400 1rem/1.6 var(--font-lato);
+  --body-lg: 400 1.125rem/1.6 var(--font-lato);
+  --button-sm: 600 0.875rem/1.25 var(--font-lato);
+  --heading-sm: 600 1.125rem/1.3 var(--font-cabin);
+  --heading-md: 600 1.375rem/1.25 var(--font-cabin);
+  --heading-lg: 600 clamp(1.75rem, 3vw, 2.5rem)/1.15 var(--font-cabin);
+  --heading-xl: 700 clamp(2.25rem, 5vw, 3.5rem)/1.1 var(--font-cabin);
+}
 
 /* ==== Border Radii ==== */
+
+:root {
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+}

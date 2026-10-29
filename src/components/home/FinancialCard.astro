@@ -1,0 +1,88 @@
+---
+interface Props {
+    financial: {
+        icon: string;
+        title: string;
+        description: string;
+    };
+}
+
+const { financial } = Astro.props;
+
+// Henter SVG-ikonerne fra src/icons som URL'er.
+const iconFiles = import.meta.glob<string>("../../icons/*.svg", {
+    eager: true,
+    query: "?url",
+    import: "default",
+});
+
+// Finder det ikon, API'et angiver.
+const iconPath = `../../icons/${financial.icon}.svg`;
+const icon = iconFiles[iconPath];
+---
+
+<article class="financial-card">
+    <div
+        class="financial-icon"
+        aria-hidden="true"
+    >
+        {
+            icon && (
+                <img
+                    src={icon}
+                    alt=""
+                    width="40"
+                    height="40"
+                />
+            )
+        }
+    </div>
+
+    <h3>{financial.title}</h3>
+
+    <p>{financial.description}</p>
+</article>
+
+<style>
+    @layer components {
+        .financial-card {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            min-width: 0;
+            height: 100%;
+            box-sizing: border-box;
+            padding: 2rem 2rem 0;
+            border-radius: 25px;
+            background-color: #e5e5e5;
+        }
+
+        .financial-icon {
+            min-height: 40px;
+        }
+
+        .financial-icon img {
+            display: block;
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .financial-card h3 {
+            margin: 0;
+            padding-block-end: 0.5rem;
+            font: var(--heading-sm);
+            text-wrap: balance;
+        }
+
+        .financial-card p {
+            margin: 0;
+            padding-block-end: 2rem;
+            color: var(--color-text);
+            font: var(--body-lg);
+            line-height: 1.6;
+            letter-spacing: 0.03em;
+            opacity: 0.9;
+        }
+    }
+</style>

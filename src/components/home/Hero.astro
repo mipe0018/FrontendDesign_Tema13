@@ -1,0 +1,312 @@
+---
+import { Image } from "astro:assets";
+import Services from "../Services.astro";
+import CEOImage from "@assets/images/ceo.webp";
+import YellowLine from "@assets/images/rectangle-yellow.svg";
+import ArrowRight from "@icons/arrow--right.svg";
+---
+
+<section class="hero">
+  <Image
+    class="yellow-line"
+    src={YellowLine}
+    alt=""
+  />
+
+  <Image
+    class="hero-ceo"
+    src={CEOImage}
+    alt="CEO"
+  />
+
+  <div class="hero-inner">
+    <div class="hero-text">
+      <h1>Empowering Your Business Growth</h1>
+
+      <p>
+        Discover tailored strategies and expert insights to take your business
+        to the next level. Let us help you navigate challenges and achieve
+        sustainable success.
+      </p>
+
+      <div class="hero-buttons">
+        <a
+          class="primary-button"
+          href="#0"
+          >Book a Meeting</a
+        >
+
+        <a
+          class="secondary-button"
+          href="#0"
+        >
+          Learn More
+          <ArrowRight class="arrow" />
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-service-list">
+      <Services />
+    </div>
+  </div>
+</section>
+
+<style>
+  @layer components {
+    .hero {
+      grid-column: a / d;
+      position: relative;
+      container-type: inline-size;
+      background-color: var(--color-neutrals-900);
+      color: var(--color-on-surface-elevated);
+      /* Gittermønsteret deles af .hero::before og .hero-text::before (mobil) */
+      --hero-grid-pattern:
+        linear-gradient(
+          to right,
+          transparent calc(100% - 1px),
+          rgb(255 255 255 / 8%) calc(100% - 1px)
+        ),
+        linear-gradient(
+          to bottom,
+          transparent calc(100% - 1px),
+          rgb(255 255 255 / 8%) calc(100% - 1px)
+        );
+    }
+
+    /* Gitter i baggrunden */
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset-inline-start: 0;
+      inset-block-end: 0;
+      width: 52%;
+      height: 70%;
+      background-image: var(--hero-grid-pattern);
+      background-size: 50px 50px;
+      mask-image: linear-gradient(to right, transparent, black 45%);
+      pointer-events: none;
+    }
+
+    /* Gul streg i baggrunden */
+    .yellow-line {
+      position: absolute;
+      inset-inline-start: 0;
+      inset-block-start: 34%;
+      z-index: 1;
+      width: 360px;
+      height: 7px;
+    }
+
+    /* Indhold begrænset til 75rem */
+    .hero-inner {
+      width: min(75rem, 100%);
+      min-height: 36rem;
+      margin-inline: auto;
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      z-index: 1;
+    }
+
+    /* Billede fra midten til højre kant */
+    .hero-ceo {
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: 50%;
+      width: 50%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      z-index: 0;
+
+      /* Billedet fader ind i baggrunden */
+      mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 25%,
+        black 100%
+      );
+    }
+
+    .hero-text {
+      grid-column: 1;
+      align-self: center;
+      max-width: 36rem;
+      padding-inline-end: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-text h1 {
+      margin: 0;
+      max-width: 35rem;
+      font-size: clamp(2rem, 3.5cqi, 3.5rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-text p {
+      max-width: 35rem;
+      margin: 0;
+      font-size: 1.125rem;
+      line-height: 1.6;
+      color: var(--color-neutrals-200);
+    }
+
+    /* Knapper */
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .hero-buttons a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 999px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .hero-buttons a:hover {
+      opacity: 0.8;
+    }
+
+    .primary-button {
+      background-color: var(--color-action);
+      color: var(--color-text);
+    }
+
+    .secondary-button {
+      border: 1px solid var(--color-neutrals-400);
+      background-color: transparent;
+      color: var(--color-on-surface-elevated);
+    }
+
+    .arrow {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    /* Services ligger hen over kanten på heroen */
+    .hero-service-list {
+      position: absolute;
+      inset-inline: 0;
+      inset-block-end: 0;
+      z-index: 2;
+      transform: translateY(50%);
+    }
+
+    /* Tablet og mindre skærme */
+    @container (max-width: 900px) {
+      .yellow-line {
+        display: none;
+      }
+
+      .hero-inner {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .hero-ceo {
+        position: relative;
+        inset: auto;
+        width: 100%;
+        height: 28rem;
+        display: block;
+        mask-image: none;
+      }
+
+      .hero-text {
+        max-width: none;
+        box-sizing: border-box;
+        padding: 3rem 2rem;
+        align-items: center;
+        text-align: center;
+      }
+
+      .hero-text p {
+        max-width: 40rem;
+      }
+
+      .hero-buttons {
+        justify-content: center;
+      }
+
+      .hero-service-list {
+        position: static;
+        transform: none;
+        width: 100%;
+      }
+
+      /* Gitteret fylder hele bredden og fortsætter bag servicekortene,
+         så baggrunden hænger sammen med hele hero-sektionen */
+      .hero::before {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    /* Samme breakpoint som servicekortene i Services.astro
+       (@media (max-width: 768px)): gitteret skifter til kun at ligge bag
+       hero-teksten, så snart kortene bliver til udfoldelige sektioner */
+    @container (max-width: 768px) {
+      /* Gitteret holdes udelukkende bag hero-teksten, overskriften og
+         knapperne – det stopper derfor af sig selv, inden servicekortene
+         begynder (.hero-text slutter, hvor .hero-service-list tager over) */
+      .hero::before {
+        display: none;
+      }
+
+      .hero-text::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: var(--hero-grid-pattern);
+        background-size: 50px 50px;
+        pointer-events: none;
+        z-index: -1;
+      }
+    }
+
+    /* Mobil */
+    @container (max-width: 600px) {
+      .hero-ceo {
+        height: 22rem;
+      }
+
+      .hero-text {
+        padding: 2.5rem 1.5rem;
+      }
+
+      .hero-text h1 {
+        font-size: 1.8rem;
+      }
+
+      .hero-text p {
+        font-size: 1rem;
+      }
+
+      .hero-buttons {
+        gap: 0.75rem;
+      }
+
+      .hero-buttons a {
+        padding: 0.75rem 1rem;
+      }
+    }
+  }
+</style>

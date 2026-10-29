@@ -1,0 +1,240 @@
+---
+import { Image } from "astro:assets";
+import aboutImg from "@assets/images/aboutImg.png";
+import checkmarkIcon from "../../icons/checkmark.svg";
+---
+
+<section
+    class="about-vision"
+    aria-labelledby="vision-title"
+>
+    <div class="about-vision-inner">
+        <!-- TEKST -->
+        <div class="vision-content">
+            <p class="eyebrow">OUR VISION</p>
+
+            <h2 id="vision-title">Turn your ideas into reality.</h2>
+
+            <p class="intro">
+                Capitalize on low hanging fruit to identify a ballpark value
+                added activity beta test. Override the digital divide with
+                additional from DevOps.
+            </p>
+
+            <!-- PUNKTER -->
+            <ul class="vision-points">
+                <li>
+                    <Image
+                        class="check-icon"
+                        src={checkmarkIcon}
+                        alt=""
+                    />
+                    <span>
+                        Bring to the table win-win survival strategies to ensure
+                        proactive domination. At the end of the day.
+                    </span>
+                </li>
+
+                <li>
+                    <Image
+                        class="check-icon"
+                        src={checkmarkIcon}
+                        alt=""
+                    />
+                    <span>
+                        Capitalize on low hanging fruit to identify a ballpark
+                        value added activity to beta test override the digital.
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- BILLEDE -->
+        <div class="vision-image">
+            <div
+                class="green-shape"
+                aria-hidden="true"
+            >
+            </div>
+
+            <Image
+                class="about-img"
+                src={aboutImg}
+                alt="Team members collaborating around a table"
+            />
+        </div>
+    </div>
+</section>
+
+<style>
+    @layer components {
+        /* ========================================
+       DESKTOP
+    ======================================== */
+
+        .about-vision {
+            width: 100%;
+            color: var(--color-neutrals-900);
+        }
+
+        .about-vision-inner {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            align-items: center;
+            gap: clamp(2rem, 5vw, 4rem);
+            width: min(75rem, 100%);
+            margin-inline: auto;
+            padding: 4rem 2rem 3rem;
+            box-sizing: border-box;
+        }
+
+        /* TEKST */
+
+        .vision-content {
+            min-width: 0;
+        }
+
+        .eyebrow {
+            margin: 0 0 1rem;
+            font: var(--body-sm);
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+        }
+
+        .vision-content h2 {
+            margin: 0 0 1rem;
+            font: var(--heading-lg);
+            letter-spacing: -0.03em;
+        }
+
+        .intro {
+            margin: 0 0 1.5rem;
+            font: var(--body-lg);
+            line-height: 1.6;
+            color: var(--color-text-muted);
+        }
+
+        /* PUNKTER */
+
+        .vision-points {
+            display: grid;
+            gap: 1rem;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .vision-points li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font: var(--body-lg);
+            line-height: 1.6;
+            color: var(--color-text-muted);
+        }
+
+        .check-icon {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-top: 0.2rem;
+            object-fit: contain;
+            filter: invert(48%) sepia(79%) saturate(500%) hue-rotate(90deg);
+        }
+
+        /* BILLEDE */
+
+        .vision-image {
+            position: relative;
+            isolation: isolate;
+            min-width: 0;
+            padding: 1.25rem;
+        }
+
+        .about-img {
+            position: relative;
+            z-index: 1;
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 25px;
+        }
+
+        /* GRØN DEKORATION */
+
+        .green-shape {
+            position: absolute;
+            z-index: 0;
+            top: 0;
+            right: 0;
+            width: 10rem;
+            height: 10rem;
+            border-radius: 25px;
+            background-color: var(--color-green-400);
+        }
+
+        /* ========================================
+       TABLET
+    ======================================== */
+
+        @media (min-width: 769px) and (max-width: 1000px) {
+            .about-vision-inner {
+                gap: 2rem;
+                padding-inline: 2rem;
+            }
+
+            .vision-image {
+                padding: 1rem;
+            }
+
+            .green-shape {
+                width: 7rem;
+                height: 7rem;
+            }
+        }
+
+        /* ========================================
+       MOBIL
+    ======================================== */
+
+        @media (max-width: 768px) {
+            .about-vision-inner {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 2rem 1.5rem;
+            }
+
+            .vision-content h2 {
+                line-height: 1.2;
+            }
+
+            .intro {
+                margin-bottom: 1.5rem;
+            }
+
+            .check-icon {
+                width: 1.25rem;
+                height: 1.25rem;
+                margin-top: 0.25rem;
+            }
+
+            .vision-image {
+                padding: 0.75rem;
+            }
+
+            .about-img {
+                border-radius: 20px;
+            }
+
+            .green-shape {
+                top: 0;
+                right: 0;
+                width: 6rem;
+                height: 6rem;
+                border-radius: 20px;
+            }
+        }
+    }
+</style>

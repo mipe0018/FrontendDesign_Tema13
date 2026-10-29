@@ -1,0 +1,211 @@
+---
+type FaqItem = {
+    question: string;
+    answer: string;
+};
+
+const faqData: FaqItem[] = await fetch("https://ftk-api.pages.dev/faq").then(
+    (res) => {
+        if (!res.ok) {
+            throw new Error("Kunne ikke hente FAQ-data");
+        }
+
+        return res.json();
+    },
+);
+---
+
+<section
+    class="faq"
+    aria-labelledby="faq-title"
+>
+    <div class="faq-intro">
+        <p class="faq-eyebrow">FAQ</p>
+        <h2 id="faq-title">Customer Questions</h2>
+        <p class="faq-description">
+            Find answers to the questions we get asked most often. If you need
+            more help, feel free to contact us.
+        </p>
+    </div>
+
+    <div class="faq-list">
+        {
+            faqData.map((item, index) => (
+                <details
+                    class="faq-item"
+                    open={index === 0}
+                >
+                    <summary class="faq-question">
+                        <span>{item.question}</span>
+                        <span
+                            class="faq-icon"
+                            aria-hidden="true"
+                        />
+                    </summary>
+
+                    <div class="faq-answer">
+                        {item.answer.split("\n\n").map((paragraph) => (
+                            <p>{paragraph}</p>
+                        ))}
+                    </div>
+                </details>
+            ))
+        }
+    </div>
+</section>
+
+<style>
+    .faq {
+        display: grid;
+        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+        gap: var(--space-8);
+
+        width: 100%;
+        max-width: 75rem;
+        margin-inline: auto;
+        padding: var(--space-8) var(--space-2);
+
+        box-sizing: border-box;
+        color: var(--color-text);
+    }
+
+    .faq-intro {
+        min-width: 0;
+        max-width: 25rem;
+    }
+
+    .faq-eyebrow {
+        margin-bottom: var(--space-2);
+        color: var(--color-blue-700);
+        font-size: var(--body-sm);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .faq-intro h2 {
+        margin-bottom: var(--space-2);
+        font-size: var(--heading-lg);
+    }
+
+    .faq-description {
+        color: var(--color-text-muted);
+        font-size: var(--body-md);
+        line-height: 1.6;
+    }
+
+    .faq-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        min-width: 0;
+    }
+
+    .faq-item {
+        min-width: 0;
+        border-bottom: 1px solid var(--color-neutrals-200);
+    }
+
+    .faq-question {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-2);
+        padding-block: 1.25rem;
+
+        color: var(--color-text);
+        font-size: var(--body-lg);
+        font-weight: 500;
+        line-height: 1.5;
+
+        cursor: pointer;
+        list-style: none;
+    }
+
+    .faq-question span:first-child {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .faq-question::-webkit-details-marker {
+        display: none;
+    }
+
+    .faq-question:focus-visible {
+        outline: 2px solid var(--color-blue-700);
+        outline-offset: 4px;
+        border-radius: 2px;
+    }
+
+    .faq-icon {
+        position: relative;
+        display: grid;
+        place-items: center;
+        flex: 0 0 2rem;
+
+        width: 2rem;
+        height: 2rem;
+
+        border: 1px solid var(--color-neutrals-200);
+        border-radius: 50%;
+    }
+
+    .faq-icon::before,
+    .faq-icon::after {
+        position: absolute;
+        width: 0.75rem;
+        height: 1px;
+
+        background: currentColor;
+        content: "";
+        transition: transform 200ms ease;
+    }
+
+    .faq-icon::after {
+        transform: rotate(90deg);
+    }
+
+    .faq-item[open] .faq-icon::after {
+        transform: rotate(0deg);
+    }
+
+    .faq-answer {
+        min-width: 0;
+        padding: 0 2.75rem 1.25rem 0;
+
+        color: var(--color-text-muted);
+        font-size: var(--body-md);
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+    }
+
+    .faq-answer p + p {
+        margin-top: var(--space-2);
+    }
+
+    @media (max-width: 700px) {
+        .faq {
+            grid-template-columns: minmax(0, 1fr);
+            gap: var(--space-8);
+        }
+
+        .faq-intro {
+            max-width: 100%;
+        }
+
+        .faq-question {
+            font-size: var(--body-md);
+        }
+
+        .faq-answer {
+            padding-right: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .faq-icon::before,
+        .faq-icon::after {
+            transition: none;
+        }
+    }
+</style>

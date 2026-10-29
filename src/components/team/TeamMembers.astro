@@ -1,0 +1,137 @@
+---
+import { getTeamMembers } from "@lib/api";
+import type { TeamMember } from "@lib/api";
+import TeamsCard from "@components/team/TeamsCard.astro";
+
+const teamMembers: TeamMember[] = await getTeamMembers();
+---
+
+<section
+    class="teams-wrapper"
+    aria-labelledby="team-members-title"
+>
+    <div class="teams-header">
+        <div class="teams-text">
+            <h2 id="team-members-title">Meet Our Great Team</h2>
+
+            <p>
+                Welcome to our amazing team! We are a group of passionate
+                individuals dedicated to excellence and innovation. Each member
+                brings unique skills and experiences, working together to
+                achieve our goals. Join us as we embark on exciting projects and
+                create lasting impacts.
+            </p>
+        </div>
+
+        <a
+            href="/contact"
+            class="join-button"
+        >
+            Join Our Team
+        </a>
+    </div>
+
+    <div class="teams-cards">
+        {teamMembers.map((team) => <TeamsCard team={team} />)}
+    </div>
+</section>
+
+<style>
+    .teams-wrapper {
+        width: min(75rem, calc(100% - 4rem));
+        margin: 0 auto 5rem;
+    }
+
+    .teams-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .teams-text {
+        max-width: 750px;
+    }
+
+    .teams-text h2 {
+        margin: 0 0 1rem;
+        font: var(--heading-lg);
+        letter-spacing: -0.03em;
+        color: var(--color-text);
+    }
+
+    .teams-text p {
+        margin: 0;
+        font: var(--body-lg);
+        line-height: 1.6;
+        color: var(--color-text-muted);
+    }
+
+    .join-button {
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 1.75rem;
+        border-radius: 999px;
+        background-color: var(--color-blue-700);
+        color: var(--color-on-surface-elevated);
+        font-family: var(--button-sm);
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+        transition:
+            opacity 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    .join-button:hover {
+        opacity: 0.85;
+    }
+
+    .join-button:focus-visible {
+        outline: 2px solid var(--color-text);
+        outline-offset: 4px;
+    }
+
+    .teams-cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 2rem;
+        width: 100%;
+    }
+
+    @media (max-width: 900px) {
+        .teams-header {
+            align-items: flex-start;
+        }
+
+        .teams-cards {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.5rem;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .teams-wrapper {
+            width: calc(100% - 2rem);
+        }
+
+        .teams-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.25rem;
+        }
+
+        .join-button {
+            margin-top: 0.25rem;
+        }
+
+        .teams-cards {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 1.5rem;
+        }
+    }
+</style>
