@@ -1,10 +1,18 @@
 ---
 import Layout from "@layouts/Layout.astro";
+import Vision from "@components/about/Vision.astro";
+import AboutHero from "@components/about/AboutHero.astro";
+import Values from "@components/home/Values.astro";
+import AboutTeam from "@components/about/AboutTeam.astro";
+import FAQ from "@components/about/FAQ.astro";
 ---
 
 <Layout>
   <main>
-    <h1>About us</h1>
-    <!-- Byg sidens sektioner her med udgangspunkt i Figma-designet. -->
+    <AboutHero />
+    <Vision />
+    <Values variant="alternative" />
+    <AboutTeam />
+    <FAQ />
   </main>
 </Layout>

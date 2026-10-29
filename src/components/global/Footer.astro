@@ -119,6 +119,7 @@
             color: var(--color-text-muted);
             font: var(--body-lg);
             line-height: 1.6;
+            text-wrap: pretty;
         }
 
         .newsletter-form {
@@ -153,6 +154,7 @@
             padding: 0.875rem 1.5rem;
             border: 0;
             border-radius: var(--radius-pill);
+            box-sizing: border-box;
             background: var(--color-action);
             color: var(--color-text);
             font: var(--button-sm);
@@ -171,12 +173,6 @@
             outline-offset: 4px;
         }
 
-        .footer-bottom a:focus-visible {
-            outline: 2px solid var(--color-action);
-            outline-offset: 4px;
-            border-radius: 4px;
-        }
-
         /* Footer bottom */
 
         .footer-bottom {
@@ -190,7 +186,6 @@
             margin-inline: auto;
             padding: var(--space-5) 2rem;
             box-sizing: border-box;
-            /* Diskret topkant, der følger footerenes mørke baggrund */
             border-block-start: 1px solid rgb(255 255 255 / 12%);
         }
 
@@ -224,6 +219,7 @@
             justify-content: flex-end;
             align-items: center;
             gap: 0.5rem;
+            min-width: 0;
             color: var(--color-text-muted);
             font: var(--body-sm);
         }
@@ -240,11 +236,17 @@
             text-decoration: underline;
         }
 
-        /* Adapt to the available newsletter width */
+        .footer-bottom a:focus-visible {
+            outline: 2px solid var(--color-action);
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
+
+        /* Newsletter adapts to its available width */
 
         @container (max-width: 600px) {
             .newsletter-inner {
-                padding: var(--space-6) 1.5rem;
+                padding: var(--space-6) 1.25rem;
             }
 
             .newsletter-description {
@@ -261,36 +263,96 @@
             .newsletter-form input,
             .newsletter-form button {
                 width: 100%;
+                min-height: 3.25rem;
+                box-sizing: border-box;
             }
         }
 
-        /* Adapt the footer bottom to the viewport */
+        /* Tablet */
 
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
+            .footer-bottom {
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                row-gap: var(--space-4);
+                padding-inline: 1.5rem;
+            }
+
+            .logo {
+                justify-self: start;
+            }
+
+            .copyright {
+                grid-column: 1 / -1;
+                grid-row: 2;
+            }
+
+            .footer-navigation {
+                justify-content: flex-end;
+            }
+        }
+
+        /* Mobile */
+
+        @media (max-width: 600px) {
+            .newsletter-inner {
+                padding: var(--space-6) 1rem;
+            }
+
+            .newsletter-inner h2 {
+                max-width: 20ch;
+                font-size: clamp(1.5rem, 7vw, 2rem);
+            }
+
+            .newsletter-description {
+                max-width: 30rem;
+                font-size: var(--body-md);
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+                align-items: stretch;
+                width: 100%;
+            }
+
+            .newsletter-form input,
+            .newsletter-form button {
+                flex: none;
+                width: 100%;
+                height: 3.25rem;
+                min-height: 3.25rem;
+                padding: 0.75rem 1rem;
+                box-sizing: border-box;
+            }
+
             .footer-bottom {
                 grid-template-columns: minmax(0, 1fr);
                 justify-items: center;
                 gap: var(--space-3);
-                min-width: 0;
-                padding: var(--space-5) 1.5rem;
+                padding: var(--space-5) 1rem;
                 text-align: center;
             }
 
             .logo,
             .copyright,
             .footer-navigation {
+                grid-column: auto;
+                grid-row: auto;
                 justify-self: center;
-                min-width: 0;
                 max-width: 100%;
+                text-align: center;
             }
 
             .footer-navigation {
                 justify-content: center;
+                column-gap: 0.5rem;
+                row-gap: var(--space-2);
             }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .newsletter-form button {
+            .newsletter-form button,
+            .logo,
+            .footer-bottom a {
                 transition: none;
             }
         }

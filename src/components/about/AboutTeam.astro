@@ -1,0 +1,315 @@
+---
+import { getTeamMembers } from "@lib/api";
+import type { TeamMember } from "@lib/api";
+import TeamsCard from "@components/team/TeamsCard.astro";
+
+const teamsData: TeamMember[] = await getTeamMembers();
+const selectedTeams = teamsData.slice(0, 2);
+---
+
+<section class="about-team">
+    <!-- DESKTOP VERSION -->
+    <div class="about-team-grid desktop-team">
+        <div class="about-team-content">
+            <span>OUR TEAM</span>
+
+            <h2>Meet the people behind our success</h2>
+
+            <p>
+                Our team is made up of creative and dedicated people who work
+                together to create meaningful digital solutions. We believe that
+                great results come from collaboration, curiosity and different
+                perspectives.
+            </p>
+
+            <a
+                href="/team"
+                class="join-team-button"
+            >
+                Meet the Team
+            </a>
+        </div>
+
+        <div class="about-team-images">
+            {
+                selectedTeams.map((team) => (
+                    <TeamsCard
+                        team={team}
+                        variant="compact"
+                    />
+                ))
+            }
+        </div>
+
+        <div class="about-team-info">
+            {
+                selectedTeams.map((team) => (
+                    <div class="team-info">
+                        <h3>{team.name}</h3>
+                        <span>{team.title}</span>
+                        <p>{team.description}</p>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+
+    <!-- MOBILE VERSION -->
+    <div class="mobile-team">
+        <div class="mobile-team-content">
+            <span>OUR TEAM</span>
+
+            <h2>Meet the people behind our success</h2>
+
+            <p>
+                Our team is made up of creative and dedicated people who work
+                together to create meaningful digital solutions. We believe that
+                great results come from collaboration, curiosity and different
+                perspectives.
+            </p>
+        </div>
+
+        {
+            selectedTeams.map((team) => (
+                <div class="mobile-team-person">
+                    <TeamsCard
+                        team={team}
+                        variant="compact"
+                    />
+
+                    <div class="team-info">
+                        <h3>{team.name}</h3>
+                        <span>{team.title}</span>
+                        <p>{team.description}</p>
+                    </div>
+                </div>
+            ))
+        }
+
+        <a
+            href="/team"
+            class="join-team-button"
+        >
+            Meet the Team
+        </a>
+    </div>
+</section>
+
+<style>
+    .about-team {
+        width: 100%;
+        margin: 5rem 0;
+    }
+
+    /* DESKTOP LAYOUT */
+
+    .about-team-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 155px minmax(0, 1fr);
+        column-gap: 5rem;
+        width: min(1100px, calc(100% - 4rem));
+        margin: 0 auto;
+        align-items: center;
+    }
+
+    .about-team-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .about-team-content > span,
+    .mobile-team-content > span {
+        margin-bottom: 1rem;
+        color: var(--color-blue-700);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+    }
+
+    .about-team-content h2 {
+        max-width: 450px;
+        margin: 0 0 1.25rem;
+        font-size: clamp(2.2rem, 4vw, 3.2rem);
+        line-height: 1.05;
+    }
+
+    .about-team-content p {
+        max-width: 450px;
+        margin: 0 0 2rem;
+        color: var(--color-text-muted);
+        line-height: 1.7;
+    }
+
+    /* BUTTON */
+
+    .join-team-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+        padding: 0.9rem 1.5rem;
+        color: var(--color-on-surface-elevated);
+        background-color: var(--color-blue-700);
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: opacity 0.2s ease;
+    }
+
+    .join-team-button:hover {
+        opacity: 0.85;
+    }
+
+    .join-team-button:focus-visible {
+        outline: 2px solid var(--color-text);
+        outline-offset: 4px;
+    }
+
+    /* TEAM IMAGES */
+
+    .about-team-images {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        width: 155px;
+        justify-self: center;
+    }
+
+    .about-team-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 2.5rem;
+        min-width: 0;
+    }
+
+    .team-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        min-width: 0;
+    }
+
+    .team-info h3 {
+        margin: 0 0 0.3rem;
+        font-size: 1.2rem;
+        line-height: 1.2;
+    }
+
+    .team-info span {
+        margin-bottom: 0.6rem;
+        color: var(--color-blue-700);
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .team-info p {
+        margin: 0;
+        color: var(--color-text-muted);
+        font-size: 0.85rem;
+        line-height: 1.5;
+    }
+
+    /* MOBILE HIDDEN BY DEFAULT */
+
+    .mobile-team {
+        display: none;
+    }
+
+    /* TABLET */
+
+    @media (max-width: 900px) {
+        .about-team-grid {
+            grid-template-columns: minmax(0, 1fr) 155px minmax(0, 1fr);
+            column-gap: 2.5rem;
+            width: calc(100% - 4rem);
+        }
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 700px) {
+        .about-team {
+            margin: 2.5rem 0 0;
+        }
+
+        .desktop-team {
+            display: none;
+        }
+
+        .mobile-team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            width: calc(100% - 3rem);
+            margin: 0 auto;
+        }
+
+        .mobile-team-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .mobile-team-content > span {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .mobile-team-content h2 {
+            max-width: 450px;
+            margin: 0 0 0.75rem;
+            font: var(--heading-xl);
+            font-size: 2.8rem;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+        }
+
+        .mobile-team-content p {
+            max-width: 450px;
+            margin: 0;
+            font: var(--body-lg);
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--color-text-muted);
+        }
+
+        .mobile-team-person {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+        }
+
+        .mobile-team-person .team-info {
+            align-items: center;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .mobile-team-person .team-info h3 {
+            margin-bottom: 0.2rem;
+        }
+
+        .mobile-team-person .team-info span {
+            margin-bottom: 0.4rem;
+        }
+
+        .mobile-team-person .team-info p {
+            margin: 0;
+        }
+
+        .mobile-team .join-team-button {
+            margin: 0 auto;
+        }
+    }
+</style>
